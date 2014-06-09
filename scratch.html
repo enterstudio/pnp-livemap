@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <style type="text/css">
+    html { height: 100% }
+    body { height: 100%; margin: 0; padding: 0 }
+    #map-canvas { height: 100% }
+  </style>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4du1SngujDMVsO91yl14Q5rzmQp7eytM"></script>
+  <script type="text/javascript">
+    $(function() {
+      var mapOptions = {
+        center: new google.maps.LatLng(-34.397, 150.644),
+        zoom: 8
+      };
+      var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+      var geocoder = new google.maps.Geocoder();
+
+      var geocode = function(latLng) {
+        var extractComponent = function(address_components, type) {
+          return _.find(address_components, function(comp) {
+            return _.contains(comp.types, type)
+          });
+        };
+
+        geocoder.geocode({ latLng: latLng }, function(results, status) {
+
+          var addressComponents = _.first(results).address_components;
+          var country = extractComponent(addressComponents, 'country');
+          var town = extractComponent(addressComponents, 'locality');
+
+          console.log("(", latLng.lat, ",", latLng.lng, ") = ", town.long_name + ",", country.long_name)
+        });
+      };
+
+      var plot = function(points) {
+        
+      };
+
+      $.ajax({
+        url: '/points.json'
+      }).done(function(data) {
+        map.setCenter(_.last(data))
+        geocode(_.last(data))
+        plot(data)
+      }).fail(function() {
+        console.log('fail', arguments)
+      })        
+    })
+
+    
+  </script>
+</head>
+<body>
+  <div id="map-canvas"/>
+</body>
+</html>
