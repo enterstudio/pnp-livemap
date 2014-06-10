@@ -1,0 +1,30 @@
+.widget_pnp_wherewearewidget .widget-title {
+  font-size: 1.5em;
+  margin-bottom: 1rem;
+}
+
+.widget_pnp_wherewearewidget .flag {
+  margin-right: 10px;
+  vertical-align: bottom;
+  position: relative;
+  top: 2px;
+}
+
+.widget_pnp_wherewearewidget .ts {
+  margin-left: 47px;
+  font-size: 0.7em;
+  color: #777;
+}
+
+/* Theme overrides */
+.widget {
+  padding: 20px 3rem !important;
+}
+
+aside .wc-shortcodes-social-icons-wrapper {
+  margin-bottom: 0 !important;
+}
+
+aside .wc-shortcodes-social-icon {
+  margin-bottom: 0 !important;
+}
