@@ -11,12 +11,20 @@ var SPOT_TRACKER_URL = 'https://api.findmespot.com/spot-main-web/consumer/rest-a
     DELAY_IN_DAYS = 1; // must be integer
 
 var points = JSON.parse(fs.readFileSync('points.json', 'utf-8')),
-    delayedPoints = delayPoints(points),
-    reducedAndDelayedPoints = reducePoints(delayedPoints, REDUCTION_FACTOR),
+    delayedPoints,
+    reducedAndDelayedPoints,
     idsSeen = points.reduce(function(memo, pt) {
       memo[pt.id] = true;
       return memo;
     }, {});
+
+var buildSupportingPointArrays = function() {
+  delayedPoints = delayPoints(points);
+  reducedAndDelayedPoints = reducePoints(delayedPoints, REDUCTION_FACTOR);
+};
+
+// Invoke immediately
+buildSupportingPointArrays();
 
 var delayPoints = function(points) {
   return points.filter(function(pt) {
@@ -50,8 +58,7 @@ var addNewPoints = function(pts) {
   });
 
   if (writeMade) {
-    delayedPoints = delayPoints(points);
-    reducedAndDelayedPoints = reducePoints(delayedPoints, REDUCTION_FACTOR);
+    buildSupportingPointArrays();
   }
 
   return writeMade;
