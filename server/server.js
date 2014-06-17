@@ -1,19 +1,29 @@
 var express = require('express'),
     fs = require('fs'),
-    unirest = require('unirest');
+    unirest = require('unirest'),
+    moment = require('moment');
 
 
 // ~-~-~- GEO DATA MANAGEMENT
 
 var SPOT_TRACKER_URL = 'https://api.findmespot.com/spot-main-web/consumer/rest-api/2.0/public/feed/0R5IZZaVDCOSge61TftWo67z7cM0yldZd/message.json',
-    REDUCTION_FACTOR = 3;
+    REDUCTION_FACTOR = 3,
+    DELAY_IN_DAYS = 1; // must be integer
 
 var points = JSON.parse(fs.readFileSync('points.json', 'utf-8')),
-    reducedPoints = reducePoints(points, REDUCTION_FACTOR),
+    delayedPoints = delayPoints(points),
+    reducedAndDelayedPoints = reducePoints(delayedPoints, REDUCTION_FACTOR),
     idsSeen = points.reduce(function(memo, pt) {
       memo[pt.id] = true;
       return memo;
     }, {});
+
+var delayPoints = function(points) {
+  return points.filter(function(pt) {
+    var daysAgo = moment().subtract('days', DELAY_IN_DAYS);
+    return moment.unix(pt.ts).isBefore(daysAgo);
+  });
+};
 
 var reducePoints = function(points, n) {
   var offset = points.length % n;
@@ -26,6 +36,8 @@ var getSpotPointsRequest = function() {
   return unirest.get(SPOT_TRACKER_URL)
 };
 
+// Attempts to add new points to each of the supporting arrays, returning true
+// if at least one points was added (not a duplicate).
 var addNewPoints = function(pts) {
   var writeMade = false;
 
@@ -38,7 +50,8 @@ var addNewPoints = function(pts) {
   });
 
   if (writeMade) {
-    reducedPoints = reducePoints(points, REDUCTION_FACTOR);
+    delayedPoints = delayPoints(points);
+    reducedAndDelayedPoints = reducePoints(delayedPoints, REDUCTION_FACTOR);
   }
 
   return writeMade;
@@ -95,12 +108,12 @@ app.all('*', function(req, res, next) {
 
 // Returns the 30 most recent points
 app.get('/points/recent', function(req, res){
-  res.send(_.last(reducedPoints, 30));
+  res.send(_.last(reducedAndDelayedPoints, 30));
 });
 
 // Returns a reduced set of points (1 out of every n)
 app.get('/points/reduced', function(req, res){
-  res.send(reducedPoints);
+  res.send(reducedAndDelayedPoints);
 });
 
 app.get('/points', function(req, res) {
