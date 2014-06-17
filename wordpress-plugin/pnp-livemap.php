@@ -31,7 +31,6 @@ class PNP_WhereWeAreWidget extends WP_Widget {
       <p>
         <img class="flag" src="/wp-content/plugins/pnp-livemap/img/flags/United-Kingdom.png" scale="0" width="32" height="32">
         Dartford, United Kingdom
-        <!--small><a href="" style="margin-left: 5px;">(show map)</a></small-->
         <br>
         <span class="ts">as of <time>Jun 9th, 1:24pm</time></span>
       </p>
