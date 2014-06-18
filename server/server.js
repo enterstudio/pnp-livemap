@@ -1,7 +1,8 @@
 var express = require('express'),
     fs = require('fs'),
     unirest = require('unirest'),
-    moment = require('moment');
+    moment = require('moment'),
+    _ = require('underscore');
 
 
 // ~-~-~- GEO DATA MANAGEMENT
@@ -18,14 +19,6 @@ var points = JSON.parse(fs.readFileSync('points.json', 'utf-8')),
       return memo;
     }, {});
 
-var buildSupportingPointArrays = function() {
-  delayedPoints = delayPoints(points);
-  reducedAndDelayedPoints = reducePoints(delayedPoints, REDUCTION_FACTOR);
-};
-
-// Invoke immediately
-buildSupportingPointArrays();
-
 var delayPoints = function(points) {
   return points.filter(function(pt) {
     var daysAgo = moment().subtract('days', DELAY_IN_DAYS);
@@ -40,6 +33,14 @@ var reducePoints = function(points, n) {
   });
 };
 
+var buildSupportingPointArrays = function() {
+  delayedPoints = delayPoints(points);
+  reducedAndDelayedPoints = reducePoints(delayedPoints, REDUCTION_FACTOR);
+};
+
+// Invoke immediately
+buildSupportingPointArrays();
+
 var getSpotPointsRequest = function() {
   return unirest.get(SPOT_TRACKER_URL)
 };
@@ -47,24 +48,26 @@ var getSpotPointsRequest = function() {
 // Attempts to add new points to each of the supporting arrays, returning true
 // if at least one points was added (not a duplicate).
 var addNewPoints = function(pts) {
-  var writeMade = false;
+  var madeChange = false;
 
   pts.forEach(function(pt) {
     if (!idsSeen[pt.id]) {
       idsSeen[pt.id] = true;
       points.push(pt);
-      writeMade = true;
+      madeChange = true;
     }
   });
 
-  if (writeMade) {
+  if (madeChange) {
     buildSupportingPointArrays();
   }
 
-  return writeMade;
+  return madeChange;
 };
 
-var writePoints = function(points) {
+var writePoints = function() {
+  console.log('Writing points');
+
   fs.writeFile('points.json', JSON.stringify(points), function(err) {
     if (err) {
       console.error(err);
@@ -74,20 +77,22 @@ var writePoints = function(points) {
 };
 
 var checkSpotTracker = function() {
+  console.log('Checking spot tracker for new points');
+
   getSpotPointsRequest().end(function(res) {
-    if (!res.body.ok) {
-      console.warn('Recieved an error response from Spot Tracker API')
+    if (!res.ok) {
+      console.warn('Recieved an error response from Spot Tracker API', res.status, res.body)
       return;
     }
 
-    var spotResponse = JSON.parse(res.body);
+    var spotResponse = res.body;
     var spotPoints = spotResponse.response.feedMessageResponse.messages.message; // wtf
 
     // Convert to our point structure
     var pnpPoints = spotPoints.map(function(spotPt) {
       return {
         id: spotPt.id,
-        ts: spotPt.dateTime,
+        ts: spotPt.unixTime,
         lat: spotPt.latitude,
         lng: spotPt.longitude
       }
@@ -95,6 +100,8 @@ var checkSpotTracker = function() {
 
     if (addNewPoints(pnpPoints)) {
       writePoints();
+    } else {
+      console.log('No new points');
     }
   });
 };
