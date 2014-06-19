@@ -37,7 +37,7 @@ class PNP_WhereWeAreWidget extends WP_Widget {
         </p>
         <img class="minimap" width="279" height="201">
       </div>
-
+      <div id="pnp-fullmap"></div>
     <?php
 
     echo $args["after_widget"];

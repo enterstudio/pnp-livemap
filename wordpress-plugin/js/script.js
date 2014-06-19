@@ -8,17 +8,23 @@ jQuery(function($) {
       HOST = 'localhost',
       MONTH_NAMES = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec' ]; // 198.199.84.58
 
-  var widget = $('.widget_pnp_wherewearewidget'),
+  var map,
+      widget = $('.widget_pnp_wherewearewidget'),
       spinner = widget.find('.geo-spinner'),
       content = widget.find('.geo-content'),
       flag = content.find('.flag'),
       timestamp = content.find('time')
       placeText = content.find('.place-text'),
-      minimap = content.find('.minimap');
+      minimap = content.find('.minimap'),
+      mapContainer = widget.find('#pnp-fullmap');
 
+  // Kick off the widget load
   $.ajax({ url: 'http://' + HOST + ':3000/points/recent' })
       .done(setupWidget)
       .fail(hideWidget);
+
+  // Handle the minimap click to show the big map
+  minimap.click(minimapClicked);
 
   function setupWidget(points) {
     minimap.attr('src', generateStaticMapUrl(points));
@@ -34,13 +40,56 @@ jQuery(function($) {
       }
     });
 
-    // map.setCenter(_.last(points));
-    // geocode(_.last(points));
-    // plot(reducePoints(points));
   }
 
   function hideWidget() {
     widget.hide();
+  }
+
+  function minimapClicked() {
+    if (!map) {
+      $.ajax({ url: 'http://' + HOST + ':3000/points/reduced' })
+          .done(setupLargeMap)
+          .fail(showError);
+    } else {
+      showLargeMap();
+    }
+  }
+
+  function setupLargeMap(points) {
+    mapContainer.show(); // allow it to get dimensions
+    showLargeMap(); // lightboxify the container
+
+    _.delay(function() {
+      map = new google.maps.Map(mapContainer.get(0), {
+          center: _.last(points),
+          zoom: 7,
+          mapTypeId: google.maps.MapTypeId.TERRAIN
+        });
+      plot(points);
+    }, 500);
+  }
+
+  function showLargeMap() {
+    mapContainer.lightbox_me({
+      overlayCSS: { background: 'black', opacity: 0.7 }
+    });
+  }
+
+  function plot(points) {
+    var poly = new google.maps.Polyline({
+      path: points,
+      geodesic: false,
+      strokeColor: '#FF0000',
+      strokeOpacity: 1.0,
+      strokeWeight: 2,
+      zIndex: 5000
+    });
+    poly.setMap(map);
+  }
+
+  function showError() {
+
   }
 
   function geocode(latLng, callback) {
@@ -145,47 +194,3 @@ jQuery(function($) {
     return url + $.param(params)
   }
 });
-
-// function getRecentPoints(callback) {
-//   $.ajax({
-//     url: '/points.json'
-//   }).done(function(points) {
-//     map.setCenter(_.last(points));
-//     geocode(_.last(points));
-//     plot(reducePoints(points));
-//     console.log(generateStaticMapUrl(reducePoints(points)));
-//   }).fail(function() {
-//     console.log('fail', arguments)
-//   });
-// }
-
-// $(function() {
-//   var mapOptions = {
-//     center: new google.maps.LatLng(-34.397, 150.644),
-//     zoom: 8
-//   };
-//   var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
-
-
-//   var plot = function(points) {
-//     var poly = new google.maps.Polyline({
-//       path: points,
-//       geodesic: false,
-//       strokeColor: '#FF0000',
-//       strokeOpacity: 1.0,
-//       strokeWeight: 2
-//     });
-//     poly.setMap(map);
-//   };
-
-//   $.ajax({
-//     url: '/points.json'
-//   }).done(function(points) {
-//     map.setCenter(_.last(points));
-//     geocode(_.last(points));
-//     plot(reducePoints(points));
-//     console.log(generateStaticMapUrl(reducePoints(points)));
-//   }).fail(function() {
-//     console.log('fail', arguments)
-//   });
-// });
