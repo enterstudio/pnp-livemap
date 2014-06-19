@@ -16,6 +16,19 @@
   color: #777;
 }
 
+.widget_pnp_wherewearewidget .minimap {
+  cursor: pointer;
+}
+
+.widget_pnp_wherewearewidget .geo-content {
+  display: none;
+}
+
+.widget_pnp_wherewearewidget .geo-spinner {
+  vertical-align: sub;
+  margin-left: 8px;
+}
+
 /* Theme overrides */
 .widget {
   padding: 20px 3rem !important;

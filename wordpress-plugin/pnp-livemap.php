@@ -24,17 +24,19 @@ class PNP_WhereWeAreWidget extends WP_Widget {
   // This is where the action happens
   public function widget($args, $instance) {
     echo $args["before_widget"];
+    $spinner_img_path = plugins_url() . '/pnp-livemap/img/spinner.gif';
 
     ?>
-      <h1 class="widget-title">Currently Cycling...</h1>
-
-      <p>
-        <img class="flag" src="/wp-content/plugins/pnp-livemap/img/flags/United-Kingdom.png" scale="0" width="32" height="32">
-        Dartford, United Kingdom
-        <br>
-        <span class="ts">as of <time>Jun 9th, 1:24pm</time></span>
-      </p>
-      <img src="http://maps.googleapis.com/maps/api/staticmap?center=51.447122963145375%2C0.219824966043234&markers=color%3Ared%7C51.447122963145375%2C0.219824966043234&path=color%3Ared%7C51.43545099534094%2C0.215885974466801%7C51.43643201328814%2C0.215778015553951%7C51.437261989340186%2C0.21575496532023%7C51.43843000754714%2C0.215554973110557%7C51.439601965248585%2C0.215369984507561%7C51.44060201011598%2C0.215344000607729%7C51.441553020849824%2C0.21562403999269%7C51.44237503409386%2C0.216153021901846%7C51.442651972174644%2C0.215806011110544%7C51.44314097240567%2C0.215977001935244%7C51.44331003539264%2C0.216082027181983%7C51.44289697520435%2C0.215830989181995%7C51.442713998258114%2C0.215020962059498%7C51.442868979647756%2C0.213899966329336%7C51.44309596158564%2C0.212731026113033%7C51.443426962941885%2C0.212350990623236%7C51.4441479742527%2C0.212484011426568%7C51.44480997696519%2C0.212583001703024%7C51.445189006626606%2C0.212241020053625%7C51.445404002442956%2C0.212635975331068%7C51.44596399739385%2C0.212837979197502%7C51.446196008473635%2C0.212900005280972%7C51.446842001751065%2C0.213393028825521%7C51.44691500812769%2C0.21407900378108%7C51.44680202007294%2C0.215108972042799%7C51.44667503423989%2C0.216491986066103%7C51.44665298983455%2C0.217388011515141%7C51.44631402567029%2C0.219382988288999%7C51.44664100371301%2C0.220019007101655%7C51.447122963145375%2C0.219824966043234&zoom=14&scale=2&size=278x200&maptype=terrain&key=AIzaSyB4du1SngujDMVsO91yl14Q5rzmQp7eytM">
+      <h1 class="widget-title">Currently Cycling... <img src="<?=$spinner_img_path?>" class="geo-spinner" width="26" height="26"></h1>
+      <div class="geo-content">
+        <p>
+          <img class="flag" width="32" height="32">
+          <span class="place-text">Dartford, United Kingdom</span>
+          <br>
+          <span class="ts">as of <time>Jun 9th, 1:24pm</time></span>
+        </p>
+        <img class="minimap" width="279" height="201">
+      </div>
 
     <?php
 
@@ -66,6 +68,10 @@ add_action('widgets_init', 'pnp_load_widget');
  */
 function pnp_enqueue_head() {
   wp_enqueue_style('pnp-livemap',  plugins_url() . '/pnp-livemap/css/style.css');
+
+  wp_enqueue_script('google-maps', 'http://maps.googleapis.com/maps/api/js?key=AIzaSyB4du1SngujDMVsO91yl14Q5rzmQp7eytM', array(), '1.0.0', true);
+  wp_enqueue_script('lightbox_me', plugins_url() . '/pnp-livemap/js/lightbox_me.js', array(), '1.0.0', true);
+  wp_enqueue_script('underscore', plugins_url() . '/pnp-livemap/js/underscore.min.js', array(), '1.0.0', true);
   wp_enqueue_script('pnp-livemap', plugins_url() . '/pnp-livemap/js/script.js', array(), '1.0.0', true);
 }
 

@@ -8,8 +8,8 @@ var express = require('express'),
 // ~-~-~- GEO DATA MANAGEMENT
 
 var SPOT_TRACKER_URL = 'https://api.findmespot.com/spot-main-web/consumer/rest-api/2.0/public/feed/0R5IZZaVDCOSge61TftWo67z7cM0yldZd/message.json',
-    REDUCTION_FACTOR = 3,
-    DELAY_IN_DAYS = 1; // must be integer
+    REDUCTION_FACTOR = 2,
+    DELAY_IN_DAYS = 0; // must be integer
 
 var points = JSON.parse(fs.readFileSync('points.json', 'utf-8')),
     delayedPoints,
@@ -19,35 +19,39 @@ var points = JSON.parse(fs.readFileSync('points.json', 'utf-8')),
       return memo;
     }, {});
 
-var delayPoints = function(points) {
+// Setup points and the spot tracker check
+buildSupportingPointArrays();
+checkSpotTracker();
+setInterval(checkSpotTracker, 1000 * 60 * 10); // 10 minutes
+
+
+function delayPoints(points) {
   return points.filter(function(pt) {
     var daysAgo = moment().subtract('days', DELAY_IN_DAYS);
     return moment.unix(pt.ts).isBefore(daysAgo);
   });
-};
+}
 
-var reducePoints = function(points, n) {
-  var offset = points.length % n;
+function reducePoints(points, n) {
+  var offset = (points.length - 1) % n;
+
   return points.filter(function(__, i) {
     return i % n == offset;
   });
-};
+}
 
-var buildSupportingPointArrays = function() {
+function buildSupportingPointArrays() {
   delayedPoints = delayPoints(points);
   reducedAndDelayedPoints = reducePoints(delayedPoints, REDUCTION_FACTOR);
-};
+}
 
-// Invoke immediately
-buildSupportingPointArrays();
-
-var getSpotPointsRequest = function() {
+function getSpotPointsRequest() {
   return unirest.get(SPOT_TRACKER_URL)
-};
+}
 
 // Attempts to add new points to each of the supporting arrays, returning true
 // if at least one points was added (not a duplicate).
-var addNewPoints = function(pts) {
+function addNewPoints(pts) {
   var madeChange = false;
 
   pts.forEach(function(pt) {
@@ -63,9 +67,9 @@ var addNewPoints = function(pts) {
   }
 
   return madeChange;
-};
+}
 
-var writePoints = function() {
+function writePoints() {
   console.log('Writing points');
 
   fs.writeFile('points.json', JSON.stringify(points), function(err) {
@@ -74,9 +78,9 @@ var writePoints = function() {
       // TODO setTimeout to try another write?
     }
   });
-};
+}
 
-var checkSpotTracker = function() {
+function checkSpotTracker() {
   console.log('Checking spot tracker for new points');
 
   getSpotPointsRequest().end(function(res) {
@@ -104,10 +108,8 @@ var checkSpotTracker = function() {
       console.log('No new points');
     }
   });
-};
+}
 
-checkSpotTracker();
-setInterval(checkSpotTracker, 1000 * 60 * 10); // 10 minutes
 
 // ~-~-~- SERVER
 
