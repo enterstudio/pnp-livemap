@@ -66,6 +66,8 @@ jQuery(function($) {
           zoom: 7,
           mapTypeId: google.maps.MapTypeId.TERRAIN
         });
+      console.log(map.setBounds)
+      map.fitBounds(computeBounds(points));
       plot(points);
     }, 500);
   }
@@ -74,6 +76,17 @@ jQuery(function($) {
     mapContainer.lightbox_me({
       overlayCSS: { background: 'black', opacity: 0.7 }
     });
+  }
+
+  function computeBounds(points) {
+    return _.chain(points)
+            .map(function(pt) {
+                return new google.maps.LatLng(pt.lat, pt.lng);
+              })
+            .reduce(function(bounds, latLng) {
+                return bounds.extend(latLng)
+              }, new google.maps.LatLngBounds())
+            .value();
   }
 
   function plot(points) {
