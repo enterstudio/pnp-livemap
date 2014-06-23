@@ -11,7 +11,7 @@ var SPOT_TRACKER_URL = 'https://api.findmespot.com/spot-main-web/consumer/rest-a
     REDUCTION_FACTOR = 2,
     DELAY_IN_DAYS = 0; // must be integer
 
-var points = JSON.parse(fs.readFileSync('points.json', 'utf-8')),
+var points = _.sortBy(JSON.parse(fs.readFileSync('points.json', 'utf-8')), 'ts'),
     delayedPoints,
     reducedAndDelayedPoints,
     idsSeen = points.reduce(function(memo, pt) {
