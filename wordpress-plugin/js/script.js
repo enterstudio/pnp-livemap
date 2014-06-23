@@ -66,7 +66,6 @@ jQuery(function($) {
           zoom: 7,
           mapTypeId: google.maps.MapTypeId.TERRAIN
         });
-      console.log(map.setBounds)
       map.fitBounds(computeBounds(points));
       plot(points);
     }, 500);
