@@ -2,6 +2,7 @@ var express = require('express'),
     fs = require('fs'),
     unirest = require('unirest'),
     moment = require('moment'),
+    compression = require('compression'),
     _ = require('underscore');
 
 
@@ -114,6 +115,7 @@ function checkSpotTracker() {
 // ~-~-~- SERVER
 
 var app = express();
+app.use(compression());
 
 // CORS
 app.all('*', function(req, res, next) {
