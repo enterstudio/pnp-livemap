@@ -33,7 +33,7 @@ class PNP_WhereWeAreWidget extends WP_Widget {
           <img class="flag" width="32" height="32">
           <span class="place-text">Dartford, United Kingdom</span>
           <br>
-          <span class="ts">as of <time>Jun 9th, 1:24pm</time></span>
+          <span class="sub"><span class="distance"></span> as of <time>Jun 9th, 1:24pm</time></span>
         </p>
         <img class="minimap" width="279" height="201">
       </div>
@@ -69,7 +69,7 @@ add_action('widgets_init', 'pnp_load_widget');
 function pnp_enqueue_head() {
   wp_enqueue_style('pnp-livemap',  plugins_url() . '/pnp-livemap/css/style.css');
 
-  wp_enqueue_script('google-maps', 'http://maps.googleapis.com/maps/api/js?key=AIzaSyB4du1SngujDMVsO91yl14Q5rzmQp7eytM', array(), '1.0.0', true);
+  wp_enqueue_script('google-maps', 'http://maps.googleapis.com/maps/api/js?libraries=geometry&key=AIzaSyB4du1SngujDMVsO91yl14Q5rzmQp7eytM', array(), '1.0.0', true);
   wp_enqueue_script('lightbox_me', plugins_url() . '/pnp-livemap/js/lightbox_me.js', array(), '1.0.0', true);
   wp_enqueue_script('underscore', plugins_url() . '/pnp-livemap/js/underscore.min.js', array(), '1.0.0', true);
   wp_enqueue_script('pnp-livemap', plugins_url() . '/pnp-livemap/js/script.js', array(), '1.0.0', true);
