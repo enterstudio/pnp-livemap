@@ -60,8 +60,8 @@ jQuery(function($) {
   }
 
   function showDistance(points) {
-    var dst = Math.ceil(computeDistanceInKm(points));
-    distance.text(dst + ' km').fadeIn();
+    var d = Math.ceil(computeDistanceInKm(points));
+    distance.text(d + ' km').fadeIn();
   }
 
   function setupLargeMap(points) {
@@ -71,7 +71,7 @@ jQuery(function($) {
     _.delay(function() {
       map = new google.maps.Map(mapContainer.get(0), {
           center: _.last(points),
-          zoom: 7,
+          zoom: 9,
           mapTypeControl: false,
           streetViewControl: false,
           mapTypeId: google.maps.MapTypeId.TERRAIN
