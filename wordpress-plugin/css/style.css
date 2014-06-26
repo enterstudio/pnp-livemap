@@ -3,11 +3,21 @@
   margin-bottom: 1rem;
 }
 
+.widget_pnp_wherewearewidget .geo-content {
+  display: none;
+  position: relative;
+  padding-top: 5px;
+}
+
 .widget_pnp_wherewearewidget .flag {
   margin-right: 10px;
   vertical-align: bottom;
-  position: relative;
-  top: 3px;
+  position: absolute;
+  top: 0;
+}
+
+.widget_pnp_wherewearewidget .place-text {
+  margin-left: 46px;
 }
 
 .widget_pnp_wherewearewidget .sub {
@@ -18,10 +28,7 @@
 
 .widget_pnp_wherewearewidget .minimap {
   cursor: pointer;
-}
-
-.widget_pnp_wherewearewidget .geo-content {
-  display: none;
+  margin-top: 10px;
 }
 
 .widget_pnp_wherewearewidget .geo-spinner {

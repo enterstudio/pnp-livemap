@@ -29,12 +29,9 @@ class PNP_WhereWeAreWidget extends WP_Widget {
     ?>
       <h1 class="widget-title">Currently Cycling... <img src="<?=$spinner_img_path?>" class="geo-spinner" width="26" height="26"></h1>
       <div class="geo-content">
-        <p>
           <img class="flag" width="32" height="32">
-          <span class="place-text">Dartford, United Kingdom</span>
-          <br>
+          <div class="place-text">Dartford, United Kingdom</div>
           <span class="sub"><span class="distance"></span> as of <time>Jun 9th, 1:24pm</time></span>
-        </p>
         <img class="minimap" width="279" height="201">
       </div>
       <div id="pnp-fullmap"></div>
