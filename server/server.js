@@ -58,7 +58,7 @@ function addNewPoints(pts) {
   pts.forEach(function(pt) {
     if (!idsSeen[pt.id]) {
       idsSeen[pt.id] = true;
-      points.push(pt);
+      insertPoint(pt);
       madeChange = true;
     }
   });
@@ -68,6 +68,12 @@ function addNewPoints(pts) {
   }
 
   return madeChange;
+}
+
+function insertPoint(pt) {
+  var i;
+  for (i = points.length - 1; i >= 0 && points[i].ts > pt.ts; i--);
+  points.splice(i + 1, 0, pt);
 }
 
 function writePoints() {
