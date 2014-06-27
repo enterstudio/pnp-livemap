@@ -42,9 +42,13 @@ jQuery(function($) {
         spinner.hide();
         content.show();
         placeText.text(getPlaceText(placeDetails));
-        flag.attr('src', BASE_FLAG_PATH + _.dasherize(placeDetails.country) + '.png');
+        flag.attr('src', toFlagSrc(placeDetails.country));
       }
     });
+  }
+
+  function toFlagSrc(country) {
+    return BASE_FLAG_PATH + _.dasherize(country.replace(/The /ig, '')) + '.png'
   }
 
   function hideWidget() {
