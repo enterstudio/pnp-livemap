@@ -66,7 +66,7 @@ add_action('widgets_init', 'pnp_load_widget');
 function pnp_enqueue_head() {
   wp_enqueue_style('pnp-livemap',  plugins_url() . '/pnp-livemap/css/style.css');
 
-  wp_enqueue_script('google-maps', 'http://maps.googleapis.com/maps/api/js?libraries=geometry&key=AIzaSyB4du1SngujDMVsO91yl14Q5rzmQp7eytM', array(), '1.0.0', true);
+  wp_enqueue_script('google-maps', 'http://maps.googleapis.com/maps/api/js?libraries=geometry&key=AIzaSyB4du1SngujDMVsO91yl14Q5rzmQp7eytM&language=en', array(), '1.0.0', true);
   wp_enqueue_script('lightbox_me', plugins_url() . '/pnp-livemap/js/lightbox_me.js', array(), '1.0.0', true);
   wp_enqueue_script('underscore', plugins_url() . '/pnp-livemap/js/underscore.min.js', array(), '1.0.0', true);
   wp_enqueue_script('pnp-livemap', plugins_url() . '/pnp-livemap/js/script.js', array(), '1.0.0', true);
