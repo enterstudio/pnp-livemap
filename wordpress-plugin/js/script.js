@@ -6,7 +6,7 @@ _.dasherize = function(str) {
 jQuery(function($) {
   var BASE_FLAG_PATH = '/wp-content/plugins/pnp-livemap/img/flags/',
       HOST = '198.199.84.58',
-      MONTH_NAMES = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec' ]; // 198.199.84.58
+      MONTH_NAMES = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec' ];
 
   var map,
       pointsPromise,
@@ -72,6 +72,7 @@ jQuery(function($) {
     mapContainer.show(); // allow it to get dimensions
     showLargeMap(); // lightboxify the container
 
+    // Hackorific. :(
     _.delay(function() {
       map = new google.maps.Map(mapContainer.get(0), {
           center: _.last(points),
