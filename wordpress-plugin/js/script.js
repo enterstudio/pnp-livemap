@@ -5,8 +5,7 @@ _.dasherize = function(str) {
 
 jQuery(function($) {
   var BASE_FLAG_PATH = '/wp-content/plugins/pnp-livemap/img/flags/',
-      HOST = '198.199.84.58',
-      MONTH_NAMES = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec' ];
+      HOST = '198.199.84.58';
 
   var map,
       pointsPromise,
@@ -164,9 +163,18 @@ jQuery(function($) {
   }
 
   function getTimestampText(unixTime) {
-    // Fuck this is ugly...in my defense it's a copy and paste job cause I'm laaazzy.
-    var pad = function(number, digits) {
-      return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
+    var MONTH_NAMES = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec' ];
+
+    var pad = function(number) {
+      if (number == 0) {
+        return '00';
+      }
+      else if (number < 10) {
+        return '0' + number;
+      }
+      else {
+        return '' + number;
+      }
     };
 
     var hours = function(h) {
@@ -203,7 +211,7 @@ jQuery(function($) {
     return MONTH_NAMES[dt.getMonth()] + ' ' +
            dt.getDate() + dayPostfix(dt.getDate()) + ', ' +
            hours(dt.getHours()) + ':' +
-           pad(dt.getMinutes(), 2) + amPm(dt.getHours());
+           pad(dt.getMinutes()) + amPm(dt.getHours());
   }
 
   function generateStaticMapUrl(points) {
