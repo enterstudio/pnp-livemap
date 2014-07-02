@@ -51,7 +51,7 @@ function getSpotPointsRequest() {
 }
 
 // Attempts to add new points to each of the supporting arrays, returning true
-// if at least one points was added (not a duplicate).
+// if at least one point was added (not a duplicate).
 function addNewPoints(pts) {
   var madeChange = false;
 
