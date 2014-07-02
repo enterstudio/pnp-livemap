@@ -185,7 +185,7 @@ jQuery(function($) {
       }
     };
 
-    var dayPostfix = function(d) {
+    var daySuffix = function(d) {
       switch (d) {
         case 1: case 21: case 31:
           return 'st';
@@ -209,7 +209,7 @@ jQuery(function($) {
     var dt = new Date(unixTime * 1000);
 
     return MONTH_NAMES[dt.getMonth()] + ' ' +
-           dt.getDate() + dayPostfix(dt.getDate()) + ', ' +
+           dt.getDate() + daySuffix(dt.getDate()) + ', ' +
            hours(dt.getHours()) + ':' +
            pad(dt.getMinutes()) + amPm(dt.getHours());
   }
