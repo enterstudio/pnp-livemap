@@ -47,9 +47,7 @@ class PNP_WhereWeAreWidget extends WP_Widget {
 
   // Updating widget replacing old instances with new
   public function update($new_instance, $old_instance) {
-    $instance = array();
-    $instance['title'] = (!empty($new_instance['title'])) ? strip_tags($new_instance['title']) : '';
-    return $instance;
+    return array();
   }
 } // Class wpb_widget ends here
 
@@ -60,9 +58,6 @@ function pnp_load_widget() {
 
 add_action('widgets_init', 'pnp_load_widget');
 
-/**
- * Proper way to enqueue scripts and styles
- */
 function pnp_enqueue_head() {
   wp_enqueue_style('pnp-livemap',  plugins_url() . '/pnp-livemap/css/style.css');
 
