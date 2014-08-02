@@ -20,9 +20,16 @@ jQuery(function($) {
       mapContainer = widget.find('#pnp-fullmap');
 
   // Kick off the widget load
+  console.log('Loading points');
   $.ajax({ url: 'http://' + HOST + ':3000/points/recent' })
-      .done(setupWidget)
-      .fail(hideWidget);
+      .done(function(points) {
+        console.log('Points loaded');
+        setupWidget(points);
+      })
+      .fail(function(__, status, error) {
+        console.error('Error communicating with server', status, error);
+        hideWidget();
+      });
 
   // Grab the points too, for distance calculation
   pointsPromise = $.ajax({ url: 'http://' + HOST + ':3000/points/reduced' })
@@ -36,6 +43,7 @@ jQuery(function($) {
     timestamp.text(getTimestampText(_.last(points).ts));
     geocode(_.last(points), function(err, placeDetails) {
       if (err) {
+        console.error('Error geocoding', _.last(points), err);
         hideWidget();
       } else {
         spinner.hide();
@@ -138,11 +146,11 @@ jQuery(function($) {
       if (status == google.maps.GeocoderStatus.OK) {
         var addressComponents = _.first(results).address_components;
         var country = extractComponent(addressComponents, 'country');
-        var province = extractComponent(addressComponents, 'administrative_area_level_1');
-        var locality = extractComponent(addressComponents, 'locality');
+        var province = extractComponent(addressComponents, 'administrative_area_level_1') || {};
+        var locality = extractComponent(addressComponents, 'locality') || {};
 
         callback(undefined, { locality: locality.long_name,
-                              province: province,
+                              province: province.long_name,
                               country: country.long_name });
       } else {
         callback(status);
