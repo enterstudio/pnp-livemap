@@ -97,6 +97,11 @@ function checkSpotTracker() {
     }
 
     var spotResponse = res.body;
+    if (!spotResponse.response.feedMessageResponse) {
+      console.warn('No points', spotResponse.response.feedMessageResponse);
+      return;
+    }
+
     var spotPoints = spotResponse.response.feedMessageResponse.messages.message; // wtf
 
     // Convert to our point structure
