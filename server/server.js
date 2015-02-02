@@ -104,6 +104,12 @@ function checkSpotTracker() {
 
     var spotPoints = spotResponse.response.feedMessageResponse.messages.message; // wtf
 
+    // OK, so if only a single point comes back, spotPoints will be the point, not the
+    // array. Double wtf.
+    if (!spotPoints.length) {
+      spotPoints = [spotPoints];
+    }
+
     // Convert to our point structure
     var pnpPoints = spotPoints.map(function(spotPt) {
       return {
