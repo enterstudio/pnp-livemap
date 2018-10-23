@@ -5,15 +5,19 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "~4.4.2",
+    "express": "~4.15.5",
     "unirest": "~0.2.7",
     "moment": "~2.7.0",
     "underscore": "~1.6.0",
-    "compression": "~1.0.8"
-  }
+    "compression": "~1.0.8",
+    "snyk": "^1.104.2"
+  },
+  "snyk": true
 }
