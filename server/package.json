@@ -12,7 +12,7 @@
   "dependencies": {
     "express": "~4.4.2",
     "unirest": "~0.2.7",
-    "moment": "~2.7.0",
+    "moment": "~2.29.2",
     "underscore": "~1.6.0",
     "compression": "~1.0.8"
   }
