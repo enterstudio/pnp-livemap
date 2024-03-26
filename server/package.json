@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "~4.4.2",
+    "express": "~4.19.2",
     "unirest": "~0.2.7",
     "moment": "~2.7.0",
     "underscore": "~1.6.0",
