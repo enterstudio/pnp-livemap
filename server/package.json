@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "~4.4.2",
-    "unirest": "~0.2.7",
+    "unirest": "~0.6.0",
     "moment": "~2.7.0",
     "underscore": "~1.6.0",
     "compression": "~1.0.8"
